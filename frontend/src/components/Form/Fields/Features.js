@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Sparkles } from 'lucide-react';
 import Checkbox from '../../shared/Checkbox';
 
 function Features({ features, selectedFeatures = [], onFeatureChange }) {
@@ -14,22 +15,25 @@ function Features({ features, selectedFeatures = [], onFeatureChange }) {
   };
 
   return (
-    <div className="mb-4">
-      <h2 className="text-lg font-bold mb-2">Funcionalidades:</h2>
-      <ul>
+    <div>
+      <div className="flex items-center gap-2 mb-4">
+        <div className="bg-green-100 rounded-lg p-2">
+          <Sparkles className="w-5 h-5 text-green-500" />
+        </div>
+        <h2 className="text-lg font-bold text-gray-800">Funcionalidades</h2>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {features.map((feature, index) => (
-          <li key={index} className="mb-2">
-            <Checkbox
-              value={feature}
-              checked={currentFeatures.includes(feature)}
-              onChange={() => handleFeatureChange(feature)}
-              className="text-green-500"
-            >
-              {feature}
-            </Checkbox>
-          </li>
+          <Checkbox
+            key={index}
+            value={feature}
+            checked={currentFeatures.includes(feature)}
+            onChange={() => handleFeatureChange(feature)}
+          >
+            {feature}
+          </Checkbox>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
