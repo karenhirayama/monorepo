@@ -1,30 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { CheckCircle, Zap } from 'lucide-react';
 import Form from './components/Form/Form';
 import RecommendationList from './components/RecommendationList/RecommendationList';
 
 function App() {
-  const [recommendations, setRecommendations ] = useState([])
+  const [recommendations, setRecommendations] = useState([]);
+  const [formKey, setFormKey] = useState(0);
+  const recommendationListRef = useRef(null);
 
-  /**
-   * Dadas atualizações no formulário, necessário atualizar a lista de recomendações
-   */
+  const handleRecommendationsChange = (newRecommendations) => {
+    setRecommendations(newRecommendations || []);
+    
+    setTimeout(() => {
+      recommendationListRef.current?.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }, 100);
+  };
+
+  const handleNewSearch = () => {
+    setRecommendations([]);
+    setFormKey((prev) => prev + 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex flex-col justify-center items-center">
-      <h1 className="text-3xl font-bold mb-8">Recomendador de Produtos RD Station</h1>
-      <div className="bg-white p-8 rounded-lg shadow-md w-full md:w-3/4 lg:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="col-span-2 mb-4">
-          <p className="text-lg">
-            Bem-vindo ao Recomendador de Produtos RD Station. Aqui você pode encontrar uma variedade de produtos da RD Station, cada um projetado para atender às necessidades específicas do seu negócio. De CRM a Marketing, de Conversas a Inteligência Artificial, temos uma solução para ajudar você a alcançar seus objetivos. Use o formulário abaixo para selecionar suas preferências e funcionalidades desejadas e receba recomendações personalizadas de produtos que melhor atendam às suas necessidades.
-          </p>
+    <div className="bg-gray-50 min-h-screen">
+      <header className="py-20 text-center">
+        <h1 className="text-4xl font-bold text-gray-900 mb-2">
+          Recomendador de Produtos <span className="text-blue-600">RD Station</span>
+        </h1>
+        <p className="text-gray-600 max-w-2xl mx-auto px-4">
+          Descubra qual produto RD Station é ideal para você! Selecione suas preferências 
+          e funcionalidades desejadas, escolha se quer uma ou múltiplas recomendações, 
+          e receba sugestões personalizadas em segundos.
+        </p>
+      </header>
+
+      <main className="max-w-6xl mx-auto px-4 pb-12">
+        <div className="bg-white rounded-2xl shadow-lg p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <Form key={formKey} onRecommendationsChange={handleRecommendationsChange} />
+          </div>
+
+          <div className="lg:col-span-1 space-y-6" ref={recommendationListRef}>
+            <RecommendationList 
+              recommendations={recommendations} 
+              onNewSearch={handleNewSearch}
+            />
+
+            <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3">
+              <div className="bg-green-100 rounded-full p-2">
+                <CheckCircle className="w-5 h-5 text-green-600" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wide">Confiança</p>
+                <p className="text-sm font-medium text-gray-800">Curadoria de Especialistas RD</p>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3">
+              <div className="bg-blue-100 rounded-full p-2">
+                <Zap className="w-5 h-5 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wide">Agilidade</p>
+                <p className="text-sm font-medium text-gray-800">Alcance suas metas mais rápido</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
-          <Form />
-        </div>
-        <div>
-          <RecommendationList recommendations={recommendations} />
-        </div>
-      </div>
+      </main>
     </div>
   );
 }
